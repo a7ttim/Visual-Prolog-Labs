@@ -126,5 +126,5 @@ incl_file("$(ProDir)pfc\\windowsApi\\windowsAPI.pack",["$(ProDir)pfc\\core.ph","
 incl_file("$(ProDir)pfc\\windowsApi\\windowsAPI.ph",["$(ProDir)pfc\\core.ph","$(ProDir)pfc\\windowsApi\\windowsAPI.cl"]).
 incl_file("$(ProDir)pfc\\windowsApi\\WinErrors\\winErrors.pack",["$(ProDir)pfc\\memory\\memory.ph","$(ProDir)pfc\\windowsApi\\WinErrors\\WinErrors.ph","$(ProDir)pfc\\windowsApi\\WinErrors\\WinErrors.pro"]).
 incl_file("$(ProDir)pfc\\windowsApi\\WinErrors\\WinErrors.ph",["$(ProDir)pfc\\core.ph","$(ProDir)pfc\\windowsApi\\WinErrors\\WinErrors.cl"]).
-incl_file("main.pack",["$(ProDir)pfc\\console\\console.ph","$(ProDir)pfc\\core.ph","main.ph","main.pro"]).
+incl_file("main.pack",["$(ProDir)pfc\\console\\console.ph","$(ProDir)pfc\\core.ph","$(ProDir)pfc\\list\\list.ph","$(ProDir)pfc\\string\\string.ph","main.ph","main.pro"]).
 incl_file("main.ph",["$(ProDir)pfc\\core.ph","main.cl"]).
