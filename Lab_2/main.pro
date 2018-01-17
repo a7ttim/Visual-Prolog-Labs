@@ -5,8 +5,9 @@ implement main
 
 clauses
     run() :-
-        contain::start(['a', 'b', 'c'], ['a', 'a', 'b', 'c', 'a', 'b', 'c']),
+        contain::start(['a', 'b', 'c'], ['a', 'a', 'b', 'c', 'a', 'b', 'c', 'a', 'b', 'c']),
         succeed.  % place your own code here
+% [a, [[b, []], [c, []]]]
 
 end implement main
 
@@ -47,13 +48,13 @@ clauses
         !.  /* Нет подсписка - вернуть 1 */
     search_sublist(_, [], 0) :-
         !.  /* Нет списка- вернуть 0, значит подсписок длиннее */
-    search_sublist([Sublist_head_ | Sublist_tail_], [List_head_ | List_tail_], Num_) :-
-        if Sublist_head_ = List_head_ then
-            search_sublist(Sublist_tail_, List_tail_, Num_1_),
-            Num_ = Num_1_
-        else
-            Num_ = 0
-        end if.
+    search_sublist([Sublist_head | Sublist_tail], [List_head | List_tail], Num) :-
+        Sublist_head = List_head,
+        !,
+        search_sublist(Sublist_tail, List_tail, Num_1),
+        Num = Num_1.
+    search_sublist(_, _, 0) :-
+        !.
 
     divide([], _, 0) :-
         !.
@@ -61,12 +62,13 @@ clauses
         !.
     divide([Sublist_head | Sublist_tail], [List_head | List_tail], Num) :-
         divide([Sublist_head | Sublist_tail], List_tail, Num_1),
-        if Sublist_head = List_head then
-            search_sublist(Sublist_tail, List_tail, Num_2),
-            Num = Num_1 + Num_2
-        else
-            Num = Num_1
-        end if.
+        Sublist_head = List_head,
+        !,
+        search_sublist(Sublist_tail, List_tail, Num_2),
+        Num = Num_1 + Num_2.
+    divide([Sublist_head | Sublist_tail], [_ | List_tail], Num) :-
+        divide([Sublist_head | Sublist_tail], List_tail, Num_1),
+        Num = Num_1.
 %Num = P + Num_1.
 %//////////////////////////////////////////////////////////////////////////
 

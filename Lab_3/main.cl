@@ -4,6 +4,6 @@ class main
     open core
 
 predicates
-    run : core::runnable.
+    run : core::runnable nondeterm.
 
 end class main
