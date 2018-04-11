@@ -1,0 +1,159 @@
+/*****************************************************************************
+
+		Copyright (c) My Company
+
+ Project:  CURSE
+ FileName: CURSE.PRO
+ Purpose: No description
+ Written by: Visual Prolog
+ Comments:
+******************************************************************************/
+
+include "curse.inc"
+	
+domains
+
+	genres_numbers = integer*.
+	genres_names = string*.
+	movies_names = string*.
+	actors = integer*.
+
+predicates
+	% Костыль, но работает
+	append(genres_numbers,genres_numbers,genres_numbers).
+	write_n(movies_names).		
+	write_n_rec(movies_names).		
+	
+	% Предикаты БД		
+	start().
+	start_action(integer).
+	
+	movie(string, integer, integer, integer, actors, real).
+	
+  	name(integer, string).
+ 	genre(integer, string).
+  	for_by_genre(genres_names, genres_numbers).
+  	get_movies_by_genres_names(string, movies_names).
+  	
+  	get_movies_by_author(string, movies_names).
+  	
+  	get_movies_by_rating(movies_names).  	
+
+  	%mycourse().
+
+clauses
+
+	% Костыли
+	append([],List,List).
+	append([H|L1],List2,[H|L3]):-
+	append(L1,List2,L3).
+		
+	% Жанры
+	genre(1, "аниме").
+	genre(2, "биографический").
+	genre(3, "боевик").
+	genre(4, "вестерн"). 
+	genre(5, "военный"). 
+	genre(6, "детектив"). 
+	genre(7, "детский"). 
+	genre(8, "документальный"). 
+	genre(9, "драма"). 
+	genre(10, "исторический"). 
+	genre(11, "кинокомикс"). 
+	genre(12, "комедия"). 
+	genre(13, "концерт"). 
+	genre(14, "короткометражный"). 
+	genre(15, "криминал"). 
+	genre(16, "мелодрама"). 
+	genre(17, "мистика"). 
+	genre(18, "музыка"). 
+	genre(19, "мультфильм"). 
+	genre(20, "мюзикл"). 
+	genre(21, "научный"). 
+	genre(22, "приключения"). 
+	genre(23, "реалити-шоу"). 
+	genre(24, "семейный"). 
+	genre(25, "спорт"). 
+	genre(26, "ток-шоу"). 
+	genre(27, "триллер"). 
+	genre(28, "ужасы"). 
+	genre(29, "фантастика"). 
+	genre(30, "фильм-нуар"). 
+	genre(31, "фэнтези"). 
+	genre(32, "эротика").
+  	
+  	% Авторы  	
+	include "names.inc"
+	
+  	% Фильмы   
+	include "movies.inc"
+   	
+   	clauses
+   	% По жанрам
+   	for_by_genre([], []).
+	for_by_genre([Genre | Genres], Result) :-
+    		findall(X, genre(X, Genre), Genres_numbers),
+    		for_by_genre(Genres, GetResult),
+    		append(Genres_numbers, GetResult, Result).
+        
+        get_movies_by_genres_names(Genres_name, Result):-
+    		%for_by_genre(Genres_names, Genres_numbers),
+    		genre(Genres_number,Genres_name),
+    		findall(X, movie(X,_,_,Genres_number,_,_), Result), Result = [], write("Не найдено\n").	
+    	get_movies_by_genres_names(Genres_name, Result):-
+    		%for_by_genre(Genres_names, Genres_numbers),
+    		genre(Genres_number,Genres_name),
+    		findall(X, movie(X,_,_,Genres_number,_,_), Result).
+    		
+    	%get_movies_by_genres_names(_, ["Нет такого жанра"]):-!.
+
+    	% По режиссёру    	
+    	get_movies_by_author(Author_name, Result):-
+    		name(X, Author_name),
+    		findall(Y, movie(Y,X,_,_,_,_), Result), Result = [], write("Не найдено\n").	
+    	get_movies_by_author(Author_name, Result):-
+    		name(X, Author_name),
+    		findall(Y, movie(Y,X,_,_,_,_), Result).	
+    		
+    	% По рейтингу
+    	get_movies_by_rating(Result):-
+    		findall(X, movie(X,_,_,_,_,_), Result).
+    		
+    	% Построчный вывод    	
+    	write_n([]):-!.
+    	write_n(List):-
+    		write("================================\n"),
+    		write_n_rec(List),
+    		write("================================\n").
+    		    		
+    	write_n_rec([]). 	
+    	write_n_rec([Head | Tail]):-
+    		write(Head, "\n"),
+    		write_n_rec(Tail).
+    	
+    	% Построчный ввод   	
+    	start_action(1):-
+		readln(Author),
+		get_movies_by_author(Author, Movies_by_author),
+		write_n(Movies_by_author), !,
+		start().		
+    	start_action(1):-    		
+		write("Не найдено\n"), !,
+		start(), !.
+	
+	start_action(2):-    
+    		readln(Genre_name),		
+  		get_movies_by_genres_names(Genre_name, Movies_by_genres),
+  		write_n(Movies_by_genres), !,
+		start().
+  	start_action(2):-    		
+		write("Не найдено\n"), !,
+		start().	
+    	start():-
+		write("Меню:\n1 - Поиск фильмов по режиссёру\n2 - Поиск фильмов по жанру\n"),
+		readint(Action),		
+		start_action(Action), !.
+    	
+goal
+	start(),
+  	readchar(_).	
